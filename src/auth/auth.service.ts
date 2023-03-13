@@ -25,12 +25,12 @@ export class AuthService {
 
     // Hash password
     const hash = await this.hashData(createUserDto.password);
-    const newUser = await this.usersService.create({
+    const { createdUser } = await this.usersService.create({
       ...createUserDto,
       password: hash,
     });
-    const tokens = await this.getTokens(newUser._id, newUser.username);
-    await this.updateRefreshToken(newUser._id, tokens.refreshToken);
+    const tokens = await this.getTokens(createdUser._id, createdUser.username);
+    await this.updateRefreshToken(createdUser._id, tokens.refreshToken);
     return tokens;
   }
 
