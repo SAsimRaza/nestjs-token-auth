@@ -12,7 +12,6 @@ import { StudentsService } from './students.service';
 import { CreateStudentDto } from './dto/create-student.dto';
 import { UpdateStudentDto } from './dto/update-student.dto';
 import { AccessTokenGuard } from 'src/common/guards/accessToken.guard';
-import { CreateEmployeeDto } from 'src/employees/dto/create-employee.dto';
 
 @Controller('students')
 export class StudentsController {
