@@ -3,8 +3,11 @@ export class CreateUserDto {
   email: string;
   password: string;
   refreshToken: string;
-  usertype: string;
+  userType: string;
   salary: string;
   department: string;
   experience: string;
+  fees: string;
+  program: string;
+  specialization: string;
 }
