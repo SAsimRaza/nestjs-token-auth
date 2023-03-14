@@ -46,10 +46,7 @@ export class UsersController {
 
   @UseGuards(AccessTokenGuard)
   @Post('newRole/:id')
-  createAsEmployee(
-    @Param('id') id: string,
-    @Body() createUserDto: CreateUserDto,
-  ) {
-    return this.usersService.createAsEmployee(id, createUserDto);
+  createNewRole(@Param('id') id: string, @Body() createUserDto: CreateUserDto) {
+    return this.usersService.createNewRole(id, createUserDto);
   }
 }

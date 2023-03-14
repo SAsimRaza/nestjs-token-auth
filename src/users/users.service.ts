@@ -52,6 +52,8 @@ export class UsersService {
         createStudentDto,
       );
       return { createdUser };
+    } else {
+      throw new BadRequestException('User selected invalid role');
     }
   }
 
@@ -88,27 +90,36 @@ export class UsersService {
     return this.userModel.findOne({ username }).exec();
   }
 
-  async createAsEmployee(id: string, createUserDto: CreateUserDto) {
-    const { userDocument } = await this.findbyId(id);
+  async createNewRole(id: string, createUserDto: CreateUserDto) {
+    const { userDocument, employeeDocument, studentDocument } =
+      await this.findbyId(id);
     if (createUserDto.userType == UserType.Student) {
-      const obj: CreateStudentDto = {
-        userId: id,
-        fees: createUserDto.fees,
-        program: createUserDto.program,
-        specialization: createUserDto.specialization,
-      };
-      const createdStudent = await this.studentsService.create(obj);
+      if (studentDocument) {
+        throw new BadRequestException('This user already a student');
+      } else {
+        const obj: CreateStudentDto = {
+          userId: id,
+          fees: createUserDto.fees,
+          program: createUserDto.program,
+          specialization: createUserDto.specialization,
+        };
+        const createdStudent = await this.studentsService.create(obj);
+      }
     } else if (createUserDto.userType == UserType.Employee) {
-      const obj: CreateEmployeeDto = {
-        userId: id,
-        experience: createUserDto.experience,
-        department: createUserDto.department,
-        salary: createUserDto.salary,
-      };
+      if (employeeDocument) {
+        throw new BadRequestException('This user already a employee');
+      } else {
+        const obj: CreateEmployeeDto = {
+          userId: id,
+          experience: createUserDto.experience,
+          department: createUserDto.department,
+          salary: createUserDto.salary,
+        };
 
-      const createdEmployee = await this.employeesService.create(obj);
+        const createdEmployee = await this.employeesService.create(obj);
+      }
     } else {
-      throw new BadRequestException('This user already listed');
+      throw new BadRequestException('User selected invalid role');
     }
 
     userDocument.userType = 'BOTH';
