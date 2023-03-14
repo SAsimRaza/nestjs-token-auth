@@ -12,6 +12,7 @@ import { StudentsService } from './students.service';
 import { CreateStudentDto } from './dto/create-student.dto';
 import { UpdateStudentDto } from './dto/update-student.dto';
 import { AccessTokenGuard } from 'src/common/guards/accessToken.guard';
+import { CreateEmployeeDto } from 'src/employees/dto/create-employee.dto';
 
 @Controller('students')
 export class StudentsController {
@@ -42,5 +43,14 @@ export class StudentsController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.studentsService.remove(id);
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Post('newEmployee/:id')
+  createAsEmployee(
+    @Param('id') id: string,
+    @Body() createEmployeeDto: CreateEmployeeDto,
+  ) {
+    return this.studentsService.createAsEmployee(id, createEmployeeDto);
   }
 }
