@@ -43,4 +43,13 @@ export class UsersController {
   remove(@Param('id') id: string) {
     return this.usersService.remove(id);
   }
+
+  @UseGuards(AccessTokenGuard)
+  @Post('newRole/:id')
+  createAsEmployee(
+    @Param('id') id: string,
+    @Body() createUserDto: CreateUserDto,
+  ) {
+    return this.usersService.createAsEmployee(id, createUserDto);
+  }
 }

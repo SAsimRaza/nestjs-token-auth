@@ -45,12 +45,5 @@ export class StudentsController {
     return this.studentsService.remove(id);
   }
 
-  @UseGuards(AccessTokenGuard)
-  @Post('newEmployee/:id')
-  createAsEmployee(
-    @Param('id') id: string,
-    @Body() createEmployeeDto: CreateEmployeeDto,
-  ) {
-    return this.studentsService.createAsEmployee(id, createEmployeeDto);
-  }
+ 
 }

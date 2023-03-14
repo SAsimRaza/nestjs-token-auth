@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { EmployeesService } from 'src/employees/employees.service';
@@ -8,6 +8,8 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User, UserDocument } from './schemas/user.schema';
 import { StudentDocument } from 'src/students/schema/student.schema';
+import { CreateStudentDto } from 'src/students/dto/create-student.dto';
+import { CreateEmployeeDto } from 'src/employees/dto/create-employee.dto';
 
 enum UserType {
   Both = 'BOTH',
@@ -84,5 +86,32 @@ export class UsersService {
 
   async findByUsername(username: string): Promise<UserDocument> {
     return this.userModel.findOne({ username }).exec();
+  }
+
+  async createAsEmployee(id: string, createUserDto: CreateUserDto) {
+    const { userDocument } = await this.findbyId(id);
+    if (createUserDto.userType == UserType.Student) {
+      const obj: CreateStudentDto = {
+        userId: id,
+        fees: createUserDto.fees,
+        program: createUserDto.program,
+        specialization: createUserDto.specialization,
+      };
+      const createdStudent = await this.studentsService.create(obj);
+    } else if (createUserDto.userType == UserType.Employee) {
+      const obj: CreateEmployeeDto = {
+        userId: id,
+        experience: createUserDto.experience,
+        department: createUserDto.department,
+        salary: createUserDto.salary,
+      };
+
+      const createdEmployee = await this.employeesService.create(obj);
+    } else {
+      throw new BadRequestException('This user already listed');
+    }
+
+    userDocument.userType = 'BOTH';
+    await this.update(id, userDocument);
   }
 }

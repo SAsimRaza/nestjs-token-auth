@@ -8,12 +8,14 @@ import { Student, StudentDocument } from './schema/student.schema';
 import { EmployeesService } from 'src/employees/employees.service';
 import { EmployeeDocument } from 'src/employees/schema/employee.schema';
 import { CreateEmployeeDto } from 'src/employees/dto/create-employee.dto';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class StudentsService {
   constructor(
     @InjectModel(Student.name) private StudentModel: Model<StudentDocument>,
     private employeesService: EmployeesService,
+    // private usersService: UsersService,
   ) {}
 
   async create(
@@ -45,20 +47,24 @@ export class StudentsService {
     return this.StudentModel.findOne({ userId }).exec();
   }
 
-  async createAsEmployee(
-    id: string,
-    createEmployeeDto: CreateEmployeeDto,
-  ): Promise<{ createdEmployee: EmployeeDocument }> {
-    console.log("Calling createAsEmployee");
-    
-    const isDataExist = await this.employeesService.findByUserId(id);
-    if (isDataExist) {
-      throw new BadRequestException('This user already a employee');
-    }
+  // async createAsEmployee(
+  //   id: string,
+  //   createEmployeeDto: CreateEmployeeDto,
+  // ): Promise<{ createdEmployee: EmployeeDocument }> {
+  //   console.log('Calling createAsEmployee');
 
-    const createdEmployee = await this.employeesService.create(
-      createEmployeeDto,
-    );
-    return createdEmployee;
-  }
+  //   const isDataExist = await this.employeesService.findByUserId(id);
+  //   if (isDataExist) {
+  //     throw new BadRequestException('This user already a employee');
+  //   }
+
+  //   const createdEmployee = await this.employeesService.create(
+  //     createEmployeeDto,
+  //   );
+  //   let { userDocument } = await this.usersService.findbyId(id);
+  //   userDocument.userType = 'BOTH';
+  //   await this.usersService.update(id, userDocument);
+
+  //   return createdEmployee;
+  // }
 }
